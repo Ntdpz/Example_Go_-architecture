@@ -1,83 +1,86 @@
 # Project Structure (Go)
 
-## Introduction
-This project is structured following best practices for a Go application. The organization ensures maintainability, scalability, and clarity.
+## Overview
+โปรเจกต์นี้ใช้ภาษา Go และมีโครงสร้างที่แบ่งแยกส่วนต่างๆ อย่างชัดเจน เพื่อให้ง่ายต่อการดูแลรักษาและพัฒนา
 
 ## Folder Structure
+
 ```
 /project-root
 │── /database
-│    └── db.go
+│   ├── db.go
 │── /cmd
-│    └── main.go
+│   ├── main.go
 │── /internal
-│    ├── /repository
-│    │    └── user_repository.go
-│    ├── /handlers
-│    │    └── user_handlers.go
-│    ├── /service
-│    │    └── user_service.go
+│   ├── /repository
+│   │   ├── user_repository.go
+│   ├── /handlers
+│   │   ├── user_handlers.go
+│   ├── /service
+│   │   ├── user_service.go
 │── /config
-│    ├── .env
-│    └── config.go
+│   ├── .env
+│   ├── config.go
+│── /routers
+│   ├── router.go
 │── /test
-│    └── test.go
+│   ├── test.go
 │── docker-compose.yaml
 │── Dockerfile
 ```
 
-### **Folder Descriptions**
+## Folder & File Explanation
 
-#### **`/database`**
-- `db.go` - Contains database connection logic and setup.
+### `/database`
+- **db.go**: จัดการการเชื่อมต่อกับฐานข้อมูล เช่น การเปิดและปิด connection
 
-#### **`/cmd`**
-- `main.go` - The main entry point of the application where the server is initialized and started.
+### `/cmd`
+- **main.go**: ไฟล์หลักของโปรเจกต์ที่ใช้ในการรันแอปพลิเคชัน โดยจะทำการโหลด configuration, สร้าง router และเริ่มต้น server
 
-#### **`/internal/repository`**
-- `user_repository.go` - Handles all interactions with the database related to user data, including queries and CRUD operations.
+### `/internal`
 
-#### **`/internal/handlers`**
-- `user_handlers.go` - Defines HTTP handlers that process incoming API requests and forward them to the appropriate services.
+#### `/repository`
+- **user_repository.go**: ชั้นที่ใช้ในการเข้าถึงฐานข้อมูล (Data Access Layer) สำหรับ `User` เช่น คำสั่ง SQL, การ query ข้อมูล ฯลฯ
 
-#### **`/internal/service`**
-- `user_service.go` - Implements business logic and acts as a bridge between handlers and repositories.
+#### `/handlers`
+- **user_handlers.go**: จัดการ HTTP request/response สำหรับ `User` เช่น API endpoints, รับ request, response JSON ฯลฯ
 
-#### **`/config`**
-- `.env` - Stores environment variables such as database credentials and configuration settings.
-- `config.go` - Loads and manages application configurations from environment variables.
+#### `/service`
+- **user_service.go**: ชั้น business logic สำหรับ `User` เช่น การ validate ข้อมูล, ประมวลผลข้อมูล, เรียกใช้ repository
 
-#### **`/test`**
-- `test.go` - Contains unit and integration tests for different components of the application.
+### `/config`
+- **.env**: เก็บค่าคอนฟิกต่างๆ เช่น Database URL, API keys, Secrets
+- **config.go**: โหลดค่า config จากไฟล์ `.env` และจัดการ environment variables
 
-#### **`docker-compose.yaml`**
-- Defines services for running the application with Docker, including the database and any dependencies.
+### `/routers`
+- **router.go**: กำหนดเส้นทาง (Routes) และเชื่อมโยงไปยัง handlers ต่างๆ
 
-#### **`Dockerfile`**
-- Specifies instructions to build a Docker image for deploying the application in a containerized environment.
+### `/test`
+- **test.go**: รวม unit tests หรือ integration tests สำหรับแอปพลิเคชัน
 
-## Getting Started
-1. Clone the repository:
-   ```sh
-   git clone <repository-url>
-   ```
-2. Navigate to the project directory:
-   ```sh
-   cd project-root
-   ```
-3. Set up the environment variables in `.env` file.
-4. Build and run the project:
-   ```sh
-   go run cmd/main.go
-   ```
-5. Run using Docker:
-   ```sh
-   docker-compose up --build
-   ```
+### Docker & Deployment
+- **docker-compose.yaml**: ใช้สำหรับกำหนด container ต่างๆ เช่น Go app, Database, Redis ฯลฯ
+- **Dockerfile**: ใช้สร้าง Docker image สำหรับแอปพลิเคชัน
 
-## Contributing
-Feel free to open issues and submit pull requests to improve the project!
+---
+## How to Run
 
+### Run with Go
+```sh
+# Install dependencies
+go mod tidy
+
+# Run the application
+go run cmd/main.go
+```
+
+### Run with Docker
+```sh
+# Build and run with Docker
+docker-compose up --build
+```
+
+---
 ## License
 This project is licensed under the MIT License.
 
