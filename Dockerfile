@@ -8,6 +8,8 @@ COPY go.mod go.sum ./
 
 RUN go mod tidy
 
+COPY . .
+
 RUN go build -o main ./cmd
 
 CMD ["/app/main"]

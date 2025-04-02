@@ -2,15 +2,18 @@ package main
 
 import (
 	"github.com/gofiber/fiber/v2"
+
+	"Example_Go_architecture/database"
+	"Example_Go_architecture/routers"
 )
 
 func main() {
 
+	database.ConnectDB()
+
 	app := fiber.New()
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello Gofiber!")
-	})
+	routers.SetupRoutes(app)
 
 	app.Listen(":8080")
 }
