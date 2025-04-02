@@ -25,8 +25,11 @@
 │   ├── router.go
 │── /test
 │   ├── test.go
+│── /models
+│   ├── user.go
 │── docker-compose.yaml
 │── Dockerfile
+
 ```
 
 ## Folder & File Explanation
