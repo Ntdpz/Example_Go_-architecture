@@ -1,4 +1,4 @@
-INSERT INTO "user" (username, password, token, image)
+INSERT INTO "users" (username, password, token, image)
 VALUES
   ('john_doe', 'secure_password123', 'token1', 'http://example.com/image1.jpg'),
   ('jane_smith', 'secure_password456', 'token2', 'http://example.com/image2.jpg'),

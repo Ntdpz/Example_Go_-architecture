@@ -26,6 +26,8 @@ func SetupRoutes(app *fiber.App, userHandler *handlers.UserHandler) {
 		return c.SendString("Successfully connected to the database!")
 	})
 
-	app.Get("/user", userHandler.GetUserHandler)
+	app.Get("/users", userHandler.GetUserHandler)
+	app.Put("/users", userHandler.UpdateUserHandler)
+	app.Delete("/users", userHandler.DeleteUserHandler)
 
 }
