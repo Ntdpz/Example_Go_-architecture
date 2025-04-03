@@ -1,10 +1,9 @@
 # Project Structure (Go)
 
 ## Overview
-โปรเจกต์นี้ใช้ภาษา Go และมีโครงสร้างที่แบ่งแยกส่วนต่างๆ อย่างชัดเจน เพื่อให้ง่ายต่อการดูแลรักษาและพัฒนา
+โปรเจกต์นี้ใช้ภาษา Go และมีโครงสร้างที่แบ่งแยกส่วนต่างๆ อย่างชัดเจน เพื่อให้ง่ายต่อการดูแลรักษาและพัฒนา โครงสร้างนี้ถูกออกแบบมาเพื่อให้สามารถปรับปรุงได้ง่ายและสามารถขยายต่อได้ในอนาคต ด้วยการแยกส่วนต่างๆ ของโปรเจกต์ออกเป็นโมดูลที่ทำหน้าที่ต่างกัน
 
 ## Folder Structure
-
 ```
 /project-root
 │── /database
@@ -27,45 +26,68 @@
 │   ├── test.go
 │── /models
 │   ├── user.go
+│── /middlewares
+│   ├── token.go
+│── /example_databasse_Query
+│   ├── create_table.txt
+│   ├── insert_data.txt
 │── docker-compose.yaml
 │── Dockerfile
-
+│── go.mod
+│── go.sum
 ```
+
 
 ## Folder & File Explanation
 
 ### `/database`
-- **db.go**: จัดการการเชื่อมต่อกับฐานข้อมูล เช่น การเปิดและปิด connection
+- **db.go**: ไฟล์นี้ใช้จัดการการเชื่อมต่อกับฐานข้อมูล เช่น การเปิดและปิดการเชื่อมต่อ รวมถึงการกำหนดค่าและการเตรียมการในการเชื่อมต่อกับฐานข้อมูล เช่น PostgreSQL หรือ MySQL
 
 ### `/cmd`
-- **main.go**: ไฟล์หลักของโปรเจกต์ที่ใช้ในการรันแอปพลิเคชัน โดยจะทำการโหลด configuration, สร้าง router และเริ่มต้น server
+- **main.go**: ไฟล์หลักที่ใช้ในการรันแอปพลิเคชัน เมื่อเรียกใช้งานโปรแกรมจะเริ่มต้นจากที่นี่ ซึ่งจะทำการโหลดการตั้งค่า (configuration), สร้าง router, และเริ่มต้น server
 
 ### `/internal`
 
 #### `/repository`
-- **user_repository.go**: ชั้นที่ใช้ในการเข้าถึงฐานข้อมูล (Data Access Layer) สำหรับ `User` เช่น คำสั่ง SQL, การ query ข้อมูล ฯลฯ
+- **user_repository.go**: ชั้นที่ทำหน้าที่เป็น Data Access Layer ซึ่งจะติดต่อกับฐานข้อมูล เช่น การ query ข้อมูลจากฐานข้อมูลและส่งผลลัพธ์กลับมา โดยเฉพาะข้อมูลของผู้ใช้ในกรณีนี้
 
 #### `/handlers`
-- **user_handlers.go**: จัดการ HTTP request/response สำหรับ `User` เช่น API endpoints, รับ request, response JSON ฯลฯ
+- **user_handlers.go**: จัดการ HTTP request และ response สำหรับ `User` เช่น การจัดการ API endpoints, การรับคำขอ (request) และส่งคำตอบ (response) กลับในรูปแบบ JSON
 
 #### `/service`
-- **user_service.go**: ชั้น business logic สำหรับ `User` เช่น การ validate ข้อมูล, ประมวลผลข้อมูล, เรียกใช้ repository
+- **user_service.go**: ชั้นที่จัดการกับ Business Logic สำหรับ `User` เช่น การตรวจสอบข้อมูล (validate), การประมวลผลข้อมูล, และการเรียกใช้งาน repository เพื่อจัดการกับข้อมูล
 
 ### `/config`
-- **.env**: เก็บค่าคอนฟิกต่างๆ เช่น Database URL, API keys, Secrets
-- **config.go**: โหลดค่า config จากไฟล์ `.env` และจัดการ environment variables
+- **.env**: ไฟล์ที่ใช้สำหรับเก็บค่าคอนฟิกต่างๆ เช่น URL ของฐานข้อมูล, API keys, หรือ Secrets ที่ไม่ควรเผยแพร่ในโค้ด
+
+- **config.go**: ไฟล์ที่ใช้ในการโหลดข้อมูลจากไฟล์ `.env` และจัดการกับ environment variables เพื่อให้สามารถใช้งานค่าต่างๆ ในโปรเจกต์ได้อย่างปลอดภัย
 
 ### `/routers`
-- **router.go**: กำหนดเส้นทาง (Routes) และเชื่อมโยงไปยัง handlers ต่างๆ
+- **router.go**: กำหนดเส้นทาง (routes) ต่างๆ ของ API เช่นการเชื่อมโยง routes ไปยัง handlers ต่างๆ ที่รับผิดชอบในแต่ละ request และ response
 
 ### `/test`
-- **test.go**: รวม unit tests หรือ integration tests สำหรับแอปพลิเคชัน
+- **test.go**: ไฟล์นี้จะเก็บ unit tests หรือ integration tests เพื่อทดสอบฟังก์ชันการทำงานของแอปพลิเคชันให้แน่ใจว่าระบบทำงานได้ตามที่คาดหวัง
+
+### `/models`
+- **user.go**: โครงสร้าง (struct) ที่ใช้เก็บข้อมูลของผู้ใช้ เช่น `id`, `username`, `password`, หรือข้อมูลส่วนตัวอื่นๆ ของผู้ใช้
+
+### `/middlewares`
+- **token.go**: ใช้ในการจัดการการตรวจสอบ token เช่น การตรวจสอบ JWT (JSON Web Token) ว่าถูกต้องหรือไม่ เพื่อยืนยันตัวตนของผู้ใช้ในแต่ละ request
+
+### `/example_databasse_Query`
+- **create_table.txt**: คำสั่ง SQL สำหรับการสร้างตารางในฐานข้อมูล
+- **insert_data.txt**: คำสั่ง SQL สำหรับการเพิ่มข้อมูลตัวอย่างลงในฐานข้อมูล
 
 ### Docker & Deployment
-- **docker-compose.yaml**: ใช้สำหรับกำหนด container ต่างๆ เช่น Go app, Database, Redis ฯลฯ
-- **Dockerfile**: ใช้สร้าง Docker image สำหรับแอปพลิเคชัน
+- **docker-compose.yaml**: ไฟล์นี้จะกำหนดว่าโปรเจกต์จะใช้งาน container อะไรบ้าง เช่น Go app, Database, Redis ฯลฯ โดยกำหนดค่าการตั้งค่าของแต่ละ container ในการใช้งาน
+- **Dockerfile**: ใช้สำหรับสร้าง Docker image สำหรับโปรเจกต์ เพื่อให้สามารถนำไปใช้งานใน container ได้
+
+### `go.mod` และ `go.sum`
+- **go.mod**: ไฟล์ที่ใช้จัดการ dependencies ของโปรเจกต์ โดยจะระบุว่ามี package ใดบ้างที่โปรเจกต์ต้องการ
+- **go.sum**: ไฟล์ที่เก็บค่าความถูกต้องของ dependencies ที่โปรเจกต์ใช้งานเพื่อความปลอดภัย
 
 ---
+
 ## How to Run
 
 ### Run with Go
@@ -76,26 +98,11 @@ go mod tidy
 # Run the application
 go run cmd/main.go
 ```
-
 ### Run with Docker
 ```sh
 # Build and run with Docker
 docker-compose up --build
 ```
 
----
-## License
-This project is licensed under the MIT License.
 
 
-/user → คืนค่า ผู้ใช้ทั้งหมด
-
-/user?Username=user1&Token=2 → คืนค่า ผู้ใช้ที่ตรงกับเงื่อนไข
-
-/user?Username=xxxx (ถ้าไม่มีข้อมูล) → คืนค่า User not found
-
-PUT /user?Token=1234: อัปเดต Username, Password, Image ของผู้ใช้ที่ตรงกับ Token หากไม่มีข้อมูลใด ๆ จะใช้ค่าเดิม
-
-DELETE /user?Token=1234: ลบผู้ใช้ที่ตรงกับ Token
-
-กรณีที่ไม่พบผู้ใช้ตาม Token: คืนค่า User not found
