@@ -93,3 +93,9 @@ This project is licensed under the MIT License.
 /user?Username=user1&Token=2 → คืนค่า ผู้ใช้ที่ตรงกับเงื่อนไข
 
 /user?Username=xxxx (ถ้าไม่มีข้อมูล) → คืนค่า User not found
+
+PUT /user?Token=1234: อัปเดต Username, Password, Image ของผู้ใช้ที่ตรงกับ Token หากไม่มีข้อมูลใด ๆ จะใช้ค่าเดิม
+
+DELETE /user?Token=1234: ลบผู้ใช้ที่ตรงกับ Token
+
+กรณีที่ไม่พบผู้ใช้ตาม Token: คืนค่า User not found
