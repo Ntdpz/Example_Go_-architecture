@@ -13,6 +13,7 @@ type UserRepository interface {
 	FindUserByParams(username, token string) ([]models.Users, error)
 	UpdateUserByToken(token string, user models.Users) (*models.Users, error)
 	DeleteUserByToken(token string) error
+	CreateUser(user models.Users) (*models.Users, error)
 }
 type userRepository struct {
 	DB *gorm.DB
@@ -89,4 +90,10 @@ func (r *userRepository) DeleteUserByToken(token string) error {
 	}
 
 	return nil
+}
+func (r *userRepository) CreateUser(user models.Users) (*models.Users, error) {
+	if err := r.DB.Create(&user).Error; err != nil {
+		return nil, err
+	}
+	return &user, nil
 }

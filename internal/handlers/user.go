@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"Example_Go_architecture/internal/services"
+	"Example_Go_architecture/middlewares"
 	"Example_Go_architecture/models"
 )
 
@@ -100,5 +101,45 @@ func (h *UserHandler) DeleteUserHandler(c *fiber.Ctx) error {
 
 	return c.JSON(fiber.Map{
 		"message": "User deleted successfully",
+	})
+}
+func (h *UserHandler) CreateUserHandler(c *fiber.Ctx) error {
+	var userData models.Users
+
+	// รับ JSON จาก Body
+	if err := c.BodyParser(&userData); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid request body",
+		})
+	}
+
+	// ตรวจสอบว่า Username ถูกส่งมาหรือไม่
+	if userData.Username == "" || userData.Password == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Username and Password are required",
+		})
+	}
+
+	// เรียก Middleware สร้าง Token
+	token, err := middlewares.GenerateToken(userData.Username)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Failed to generate token",
+		})
+	}
+	userData.Token = token
+
+	// บันทึกลง Database
+	newUser, err := h.Service.CreateUser(userData)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Failed to create user",
+		})
+	}
+
+	// ส่ง Response
+	return c.JSON(fiber.Map{
+		"data":    newUser,
+		"message": "User created successfully",
 	})
 }

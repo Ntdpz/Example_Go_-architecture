@@ -11,6 +11,7 @@ type UserService interface {
 	GetUsersByParams(username, token string) ([]models.Users, error)
 	UpdateUserByToken(token string, user models.Users) (*models.Users, error)
 	DeleteUserByToken(token string) error
+	CreateUser(user models.Users) (*models.Users, error)
 }
 type userService struct {
 	repo repositories.UserRepository
@@ -32,4 +33,7 @@ func (s *userService) UpdateUserByToken(token string, user models.Users) (*model
 
 func (s *userService) DeleteUserByToken(token string) error {
 	return s.repo.DeleteUserByToken(token)
+}
+func (s *userService) CreateUser(user models.Users) (*models.Users, error) {
+	return s.repo.CreateUser(user)
 }
