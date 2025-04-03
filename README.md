@@ -104,5 +104,37 @@ go run cmd/main.go
 docker-compose up --build
 ```
 
+# Project Setup Guide
+
+## เริ่มการใช้งานโปรเจค
+
+1. รันโปรเจคโดยใช้ Docker:
+```docker-compose up --build```
+
+2. หลังจากที่ Docker รันเสร็จแล้ว ให้เชื่อมต่อกับฐานข้อมูล PostgreSQL ผ่านโปรแกรมจัดการฐานข้อมูล เช่น **PGAdmin4**.
+
+## การเชื่อมต่อฐานข้อมูล
+
+- **Host:** localhost
+- **User:** admin
+- **Password:** admin
+- **Maintenance Database:** gofiber_db
+
+ค่าดังกล่าวสามารถดูได้จากไฟล์ `docker-compose.yml` ในโปรเจกต์ของคุณ.
+
+## การใช้งานฐานข้อมูล
+
+1. เมื่อเชื่อมต่อกับฐานข้อมูลสำเร็จแล้ว ให้ทำการรัน Script Query ของ PostgreSQL ที่อยู่ในโฟลเดอร์ `example_databasse_Query/`:
+
+- **สร้างตาราง:** รันไฟล์ `create_table.txt`
+- **เพิ่มข้อมูล:** รันไฟล์ `insert_data.txt`
+
+ใช้คำสั่งใน PGAdmin หรือเครื่องมือ PostgreSQL อื่นๆ เพื่อรัน SQL Queries ที่มีอยู่ในไฟล์เหล่านี้.
+
+---
+
+**หมายเหตุ:** คำแนะนำนี้เป็นขั้นตอนเบื้องต้นในการเริ่มต้นใช้งานโปรเจกต์กับฐานข้อมูล PostgreSQL โดยใช้ Docker. หากมีข้อสงสัยหรือปัญหาในการใช้งาน, กรุณาตรวจสอบไฟล์ `docker-compose.yml` หรือเอกสารเพิ่มเติม.
+
+
 
 
