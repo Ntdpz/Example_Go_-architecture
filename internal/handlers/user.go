@@ -21,8 +21,8 @@ func NewUserHandler(service services.UserService) *UserHandler {
 // ฟังก์ชันดึงข้อมูลผู้ใช้
 func (h *UserHandler) GetUserHandler(c *fiber.Ctx) error {
 	// รับค่า parameter Username และ Token
-	username := c.Query("Username")
-	token := c.Query("Token")
+	username := c.Query("username")
+	token := c.Query("token")
 
 	// ถ้ามีการส่ง Username หรือ Token
 	if username != "" || token != "" {

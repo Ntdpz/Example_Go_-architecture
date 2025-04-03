@@ -4,19 +4,32 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
+	"strings"
 	"time"
 
-	"github.com/golang-jwt/jwt" // นำเข้า JWT Library
+	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt"
+	"github.com/joho/godotenv"
+
+	"Example_Go_architecture/database"
+	"Example_Go_architecture/models"
 )
 
 // กำหนดค่า Secret Key จากไฟล์ .env
 var secretKey string
 
-// ฟังก์ชัน init จะทำงานอัตโนมัติเมื่อเริ่มทำงาน
+// ฟังก์ชันสำหรับโหลดค่า .env
 func init() {
-	secretKey = os.Getenv("JWT_SECRET_KEY")
+	// โหลดไฟล์ .env
+	err := godotenv.Load("config/.env")
+	if err != nil {
+		panic("Error loading .env file")
+	}
+
+	// อ่านค่า SECRET_KEY จากไฟล์ .env
+	secretKey = os.Getenv("SECRET_KEY")
 	if secretKey == "" {
-		panic("JWT_SECRET_KEY is not set in the environment variables") // หยุดโปรแกรมถ้าไม่พบค่าใน ENV
+		panic("SECRET_KEY is required in .env file")
 	}
 }
 
@@ -47,4 +60,31 @@ func GenerateToken(username string) (string, error) {
 	}
 
 	return tokenString, nil // คืนค่า JWT Token
+}
+
+// CheckTokenMiddleware คือ Middleware ที่ใช้ตรวจสอบว่า Token มีใน Header และถูกต้องหรือไม่
+func CheckTokenMiddleware(c *fiber.Ctx) error {
+	// ดึงค่า Token จาก Header
+	token := c.Get("token")
+	if token == "" {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": "Token is required",
+		})
+	}
+
+	// ลบคำว่า "Bearer " ออกจาก Token หากมี
+	if len(token) > 6 && strings.ToUpper(token[:7]) == "BEARER " {
+		token = token[7:]
+	}
+
+	// ตรวจสอบว่า Token นี้มีใน Database หรือไม่
+	var user models.Users
+	if err := database.DB.Where("token = ?", token).First(&user).Error; err != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": "Invalid or expired token",
+		})
+	}
+
+	// ถ้า Token ถูกต้องให้ทำการส่งต่อไปยัง Handler
+	return c.Next()
 }

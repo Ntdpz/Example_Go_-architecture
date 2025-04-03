@@ -5,6 +5,7 @@ import (
 
 	"Example_Go_architecture/database"          // นำเข้าแพ็กเกจ database
 	"Example_Go_architecture/internal/handlers" // นำเข้าแพ็กเกจ handlers
+	"Example_Go_architecture/middlewares"
 )
 
 // Function SetupRoutes() ใช้สำหรับกำหนด Routes ของ API
@@ -38,14 +39,14 @@ func SetupRoutes(app *fiber.App, userHandler *handlers.UserHandler) {
 	//  API ที่เกี่ยวข้องกับ User ใช้ userHandler
 
 	// ดึงข้อมูลผู้ใช้ทั้งหมด
-	app.Get("/users", userHandler.GetUserHandler)
+	app.Get("/users", middlewares.CheckTokenMiddleware, userHandler.GetUserHandler)
 
 	// อัปเดตข้อมูลผู้ใช้
-	app.Put("/users", userHandler.UpdateUserHandler)
+	app.Put("/users", middlewares.CheckTokenMiddleware, userHandler.UpdateUserHandler)
 
 	// ลบข้อมูลผู้ใช้
-	app.Delete("/users", userHandler.DeleteUserHandler)
+	app.Delete("/users", middlewares.CheckTokenMiddleware, userHandler.DeleteUserHandler)
 
 	// สร้างผู้ใช้ใหม่
-	app.Post("/users", userHandler.CreateUserHandler)
+	app.Post("/users", middlewares.CheckTokenMiddleware, userHandler.CreateUserHandler)
 }
