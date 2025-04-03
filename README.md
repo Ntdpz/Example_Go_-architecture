@@ -87,3 +87,9 @@ docker-compose up --build
 ## License
 This project is licensed under the MIT License.
 
+
+/user → คืนค่า ผู้ใช้ทั้งหมด
+
+/user?Username=user1&Token=2 → คืนค่า ผู้ใช้ที่ตรงกับเงื่อนไข
+
+/user?Username=xxxx (ถ้าไม่มีข้อมูล) → คืนค่า User not found
