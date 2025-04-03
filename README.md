@@ -126,8 +126,8 @@ docker-compose up --build
 
 1. เมื่อเชื่อมต่อกับฐานข้อมูลสำเร็จแล้ว ให้ทำการรัน Script Query ของ PostgreSQL ที่อยู่ในโฟลเดอร์ `example_databasse_Query/`:
 
-- **สร้างตาราง:** รันไฟล์ `create_table.txt`
-- **เพิ่มข้อมูล:** รันไฟล์ `insert_data.txt`
+- **สร้างตาราง:** รัน Script ที่อยู่ในไฟล์ `create_table.txt`
+- **เพิ่มข้อมูล:** รัน Script ที่อยู่ในไฟล์ `insert_data.txt`
 
 ใช้คำสั่งใน PGAdmin หรือเครื่องมือ PostgreSQL อื่นๆ เพื่อรัน SQL Queries ที่มีอยู่ในไฟล์เหล่านี้.
 
