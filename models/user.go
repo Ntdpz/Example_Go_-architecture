@@ -2,6 +2,7 @@ package models
 
 import "time"
 
+// Users คือโครงสร้าง (Struct) สำหรับตาราง Users ใน Database
 type Users struct {
 	ID        uint      `gorm:"primaryKey;autoIncrement" json:"id"`
 	Username  string    `gorm:"type:varchar(255);not null" json:"username"`
